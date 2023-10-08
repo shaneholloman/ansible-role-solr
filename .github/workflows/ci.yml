@@ -1,0 +1,91 @@
+---
+name: CI
+"on":
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "30 6 * * 2"
+
+defaults:
+  run:
+    working-directory: 'shaneholloman.solr'
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v4
+        with:
+          path: 'shaneholloman.solr'
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies.
+        run: pip3 install yamllint
+
+      - name: Lint code.
+        run: |
+          yamllint .
+
+  molecule:
+    name: Molecule
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          # Solr 8.
+          - distro: rockylinux9
+            playbook: converge.yml
+          - distro: rockylinux8
+            playbook: converge.yml
+          - distro: ubuntu1804
+            playbook: converge.yml
+          - distro: debian10
+            playbook: converge.yml
+
+          # Solr 7.
+          - distro: rockylinux8
+            playbook: solr-7.yml
+          - distro: debian10
+            playbook: solr-7.yml
+
+          # Older versions.
+          - distro: ubuntu1804
+            playbook: solr-6.yml
+          - distro: ubuntu1804
+            playbook: solr-5.yml
+          - distro: ubuntu1804
+            playbook: solr-4.yml
+          - distro: ubuntu1804
+            playbook: solr-3.yml
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v4
+        with:
+          path: 'shaneholloman.solr'
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies.
+        run: pip3 install ansible molecule molecule-plugins[docker] docker
+
+      - name: Run Molecule tests.
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_PLAYBOOK: ${{ matrix.playbook }}
