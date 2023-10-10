@@ -1,6 +1,6 @@
 # Ansible Role: Apache Solr
 
-[![CI](https://github.com/shaneholloman-org/ansible-role-solr/actions/workflows/ci.yml/badge.svg)](https://github.com/shaneholloman-org/ansible-role-solr/actions/workflows/ci.yml)
+[![CI](https://github.com/shaneholloman/ansible-role-solr/actions/workflows/ci.yml/badge.svg)](https://github.com/shaneholloman/ansible-role-solr/actions/workflows/ci.yml)
 
 Installs [Apache Solr](http://lucene.apache.org/solr/) on Linux servers.
 
@@ -111,4 +111,3 @@ MIT / BSD
 ## Author Information
 
 This role was created in 2023
-
