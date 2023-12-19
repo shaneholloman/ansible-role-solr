@@ -4,6 +4,7 @@
 #
 # @author Shane Holloman, 2015
 
+# shellcheck disable=SC1091
 . /etc/rc.d/init.d/functions
 
 SOLR_DIR="{{ solr_install_path }}/example"
@@ -13,12 +14,12 @@ STOP_COMMAND="java -jar $JAVA_OPTIONS $SOLR_DIR/start.jar --stop"
 LOG_FILE="{{ solr_log_file_path }}"
 
 start() {
-    echo -n "Starting solr... "
+    printf "Starting solr... "
 
-    if ps aux | grep "[s]olr.solr.home" >/dev/null; then
-        echo -n "already started... "
+    if pgrep -f "solr.solr.home" >/dev/null; then
+        printf "already started... "
     else
-        cd "$SOLR_DIR" && daemon --user="{{ solr_user }}" $START_COMMAND >$LOG_FILE &
+        cd "$SOLR_DIR" && daemon --user="{{ solr_user }}" "$START_COMMAND" >"$LOG_FILE" &
     fi
 
     RETVAL=$?
@@ -31,12 +32,12 @@ start() {
 }
 
 stop() {
-    echo -n "Stopping solr... "
+    printf "Stopping solr... "
 
-    if ps aux | grep "[s]olr.solr.home" >/dev/null; then
+    if pgrep -f "solr.solr.home" >/dev/null; then
         $STOP_COMMAND
     else
-        echo -n "already stopped... "
+        printf "already stopped... "
     fi
 
     RETVAL=$?
@@ -55,7 +56,7 @@ restart() {
 }
 
 check_status() {
-    if ps aux | grep "[s]olr.solr.home" >/dev/null; then
+    if pgrep -f "solr.solr.home" >/dev/null; then
         printf "Solr is running.\n"
     else
         printf "Solr is stopped.\n"
@@ -76,9 +77,9 @@ restart)
     restart
     ;;
 *)
-    echo $"Usage: solr {start|status|stop|restart}"
+    echo "Usage: solr {start|status|stop|restart}"
     exit 3
     ;;
 esac
 
-exit $RETVAL
+exit "$RETVAL"
