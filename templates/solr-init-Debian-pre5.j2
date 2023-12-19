@@ -22,14 +22,13 @@ JAVA_OPTIONS="-Dsolr.solr.home={{ solr_home }} -Djetty.host={{ solr_host }} -Dje
 START_COMMAND="java -jar $JAVA_OPTIONS start.jar"
 LOG_FILE="{{ solr_log_file_path }}"
 
-start () {
+start() {
     echo -n "Starting {{ solr_service_name }}... "
 
     daemon -U --chdir="$SOLR_DIR" --command "$START_COMMAND" --respawn --output=$LOG_FILE --name={{ solr_service_name }}
 
     RETVAL=$?
-    if [ $RETVAL = 0 ]
-    then
+    if [ $RETVAL = 0 ]; then
         echo "done."
     else
         echo "failed. See error code for more information."
@@ -37,14 +36,13 @@ start () {
     return $RETVAL
 }
 
-stop () {
+stop() {
     echo -n "Stopping {{ solr_service_name }}... "
 
     daemon --stop --name={{ solr_service_name }}
 
     RETVAL=$?
-    if [ $RETVAL = 0 ]
-    then
+    if [ $RETVAL = 0 ]; then
         echo "done."
     else
         echo "failed. See error code for more information."
@@ -52,13 +50,12 @@ stop () {
     return $RETVAL
 }
 
-restart () {
+restart() {
     echo -n "Restarting solr... "
     daemon --restart --name={{ solr_service_name }}
 
     RETVAL=$?
-    if [ $RETVAL = 0 ]
-    then
+    if [ $RETVAL = 0 ]; then
         echo "done."
     else
         echo "failed. See error code for more information."
@@ -66,28 +63,28 @@ restart () {
     return $RETVAL
 }
 
-check_status () {
+check_status() {
     # Report on the status of the daemon
     daemon --running --name={{ solr_service_name }} --verbose
     return $?
 }
 
 case "$1" in
-    start)
-        start
+start)
+    start
     ;;
-    status)
-        check_status
+status)
+    check_status
     ;;
-    stop)
-        stop
+stop)
+    stop
     ;;
-    restart)
-        restart
+restart)
+    restart
     ;;
-    *)
-        echo $"Usage: solr {start|status|stop|restart}"
-        exit 3
+*)
+    echo $"Usage: solr {start|status|stop|restart}"
+    exit 3
     ;;
 esac
 

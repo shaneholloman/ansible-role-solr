@@ -2,8 +2,6 @@
 # chkconfig: 2345 95 05
 # description: Controls an Apache Solr process.
 #
-# TODO: Describe this file.
-#
 # @author Shane Holloman, 2015
 
 . /etc/rc.d/init.d/functions
@@ -14,19 +12,17 @@ START_COMMAND="java -jar $JAVA_OPTIONS start.jar"
 STOP_COMMAND="java -jar $JAVA_OPTIONS $SOLR_DIR/start.jar --stop"
 LOG_FILE="{{ solr_log_file_path }}"
 
-start () {
+start() {
     echo -n "Starting solr... "
 
-    if ps aux | grep "[s]olr.solr.home" > /dev/null
-    then
+    if ps aux | grep "[s]olr.solr.home" >/dev/null; then
         echo -n "already started... "
     else
-        cd "$SOLR_DIR" && daemon --user="{{ solr_user }}" $START_COMMAND > $LOG_FILE &
+        cd "$SOLR_DIR" && daemon --user="{{ solr_user }}" $START_COMMAND >$LOG_FILE &
     fi
 
     RETVAL=$?
-    if [ $RETVAL = 0 ]
-    then
+    if [ $RETVAL = 0 ]; then
         echo "done."
     else
         echo "failed. See error code for more information."
@@ -34,19 +30,17 @@ start () {
     return $RETVAL
 }
 
-stop () {
+stop() {
     echo -n "Stopping solr... "
 
-    if ps aux | grep "[s]olr.solr.home" > /dev/null
-    then
+    if ps aux | grep "[s]olr.solr.home" >/dev/null; then
         $STOP_COMMAND
     else
         echo -n "already stopped... "
     fi
 
     RETVAL=$?
-    if [ $RETVAL = 0 ]
-    then
+    if [ $RETVAL = 0 ]; then
         echo "done."
     else
         echo "failed. See error code for more information."
@@ -54,15 +48,14 @@ stop () {
     return $RETVAL
 }
 
-restart () {
+restart() {
     $0 stop
     sleep 3
     $0 start
 }
 
-check_status () {
-    if ps aux | grep "[s]olr.solr.home" > /dev/null
-    then
+check_status() {
+    if ps aux | grep "[s]olr.solr.home" >/dev/null; then
         printf "Solr is running.\n"
     else
         printf "Solr is stopped.\n"
@@ -70,21 +63,21 @@ check_status () {
 }
 
 case "$1" in
-    start)
-        start
+start)
+    start
     ;;
-    status)
-        check_status
+status)
+    check_status
     ;;
-    stop)
-        stop
+stop)
+    stop
     ;;
-    restart)
-        restart
+restart)
+    restart
     ;;
-    *)
-        echo $"Usage: solr {start|status|stop|restart}"
-        exit 3
+*)
+    echo $"Usage: solr {start|status|stop|restart}"
+    exit 3
     ;;
 esac
 
