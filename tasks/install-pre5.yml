@@ -1,7 +1,8 @@
 ---
 # Install Solr.
 - name: Check if Solr is already installed.
-  ansible.builtin.stat: "path={{ solr_install_path }}/dist/{{ solr_filename }}.war"
+  ansible.builtin.stat:
+    path: "{{ solr_install_path }}/dist/{{ solr_filename }}.war"
   register: solr_war_file
 
 - name: Copy Solr into place.
@@ -9,16 +10,16 @@
   when: not solr_war_file.stat.exists
 
 - name: Ensure Solr install files are owned by the solr_user.
-  ansible.builtin.file:  # noqa 208
+  ansible.builtin.file:  # noqa risky-file-permissions
     path: "{{ solr_install_path }}"
     owner: "{{ solr_user }}"
     group: "{{ solr_group }}"
     recurse: true
   when: not solr_war_file.stat.exists
 
-# Set up solr_home.
 - name: Check if solr_home is already set up.
-  ansible.builtin.stat: "path={{ solr_home }}/solr.xml"
+  ansible.builtin.stat:
+    path: "{{ solr_home }}/solr.xml"
   register: solr_example
 
 - name: Ensure solr_home directory exists.
@@ -43,7 +44,7 @@
   when: "not solr_example.stat.exists and solr_version.split('.')[0] == '4'"
 
 - name: Ensure Solr home files are owned by the solr_user.
-  ansible.builtin.file:  # noqa 208
+  ansible.builtin.file:  # noqa risky-file-permissions
     path: "{{ solr_home }}"
     owner: "{{ solr_user }}"
     group: "{{ solr_group }}"
@@ -69,7 +70,9 @@
   when: ansible_service_mgr != 'systemd'
 
 - name: Ensure daemon is installed (Debian).
-  ansible.builtin.apt: name=daemon state=present
+  ansible.builtin.apt:
+    name: daemon
+    state: present
   when:
     - ansible_os_family == "Debian"
     - ansible_service_mgr != 'systemd'

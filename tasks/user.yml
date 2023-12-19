@@ -1,6 +1,8 @@
 ---
 - name: Ensure solr_group exists.
-  ansible.builtin.group: "name={{ solr_group }} state=present"
+  ansible.builtin.group:
+    name: "{{ solr_group }}"
+    state: present
 
 - name: Ensure solr_user exists.
   ansible.builtin.user:
