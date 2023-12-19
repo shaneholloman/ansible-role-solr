@@ -23,6 +23,7 @@
   with_items: "{{ solr_cores }}"
   become: true
   become_user: "{{ solr_user }}"
+  changed_when: False
 
 - name: Create configured cores.
   ansible.builtin.command: "{{ solr_install_path }}/bin/solr create -c {{ item }} -p {{ solr_port }}"
@@ -30,3 +31,4 @@
   with_items: "{{ solr_cores }}"
   become: true
   become_user: "{{ solr_user }}"
+  changed_when: "item not in solr_cores_current.content"

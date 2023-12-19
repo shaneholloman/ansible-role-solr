@@ -32,6 +32,7 @@
   ansible.builtin.get_url:
     url: "{{ solr_project_mirror }}/solr/{{ solr_version }}/{{ solr_filename }}.tgz"
     dest: "{{ solr_workspace }}/{{ solr_filename }}.tgz"
+    mode: '0644'
     force: false
   when: solr_install_path_status.stat.isdir is not defined
   register: solr_download_status

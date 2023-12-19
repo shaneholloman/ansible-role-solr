@@ -8,6 +8,8 @@
 - name: Copy Solr into place.
   ansible.builtin.command: "cp -r {{ solr_workspace }}/{{ solr_filename }} {{ solr_install_path }}"
   when: not solr_war_file.stat.exists
+  changed_when: "'{{ solr_workspace }}/{{ solr_filename }}' not in result.stdout"
+  register: result
 
 - name: Ensure Solr install files are owned by the solr_user.
   ansible.builtin.file:  # noqa risky-file-permissions
@@ -34,6 +36,7 @@
 - name: Copy Solr example into solr_home.
   ansible.builtin.shell: "cp -r {{ solr_install_path }}/example/solr/* {{ solr_home }}"
   when: not solr_example.stat.exists
+  changed_when: False
 
 - name: Fix the example solrconfig.xml file.
   ansible.builtin.replace:
