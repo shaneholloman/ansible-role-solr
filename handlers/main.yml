@@ -1,7 +1,11 @@
 ---
+- name: Pause before restart
+  ansible.builtin.pause:
+    seconds: 5
+  when: solr_restart_handler_enabled
+
 - name: Restart solr
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: "{{ solr_service_name }}"
     state: restarted
-    sleep: 5
   when: solr_restart_handler_enabled
