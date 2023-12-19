@@ -1,34 +1,35 @@
 ---
-- import_tasks: user.yml
+- name: Import user tasks if solr_create_user is true
+  ansible.builtin.import_tasks: user.yml
   when: solr_create_user
 
 - name: Set solr_filename for Solr 4+.
-  set_fact:
+  ansible.builtin.set_fact:
     solr_filename: "solr-{{ solr_version }}"
   when: "solr_version.split('.')[0] >= '4'"
 
 - name: Set solr_filename for Solr 3.x.
-  set_fact:
+  ansible.builtin.set_fact:
     solr_filename: "apache-solr-{{ solr_version }}"
   when: "solr_version.split('.')[0] == '3'"
 
 - name: Check if Solr has been installed already.
-  stat:
+  ansible.builtin.stat:
     path: "{{ solr_install_path }}"
   register: solr_install_path_status
 
 - name: Set solr_mirror for Solr < 9.
-  set_fact:
+  ansible.builtin.set_fact:
     solr_project_mirror: "{{ solr_mirror }}/lucene"
   when: solr_version.split('.')[0]|int < 9
 
 - name: Set solr_mirror for Solr 9+.
-  set_fact:
+  ansible.builtin.set_fact:
     solr_project_mirror: "{{ solr_mirror }}/solr"
   when: solr_version.split('.')[0]|int >= 9
 
 - name: Download Solr.
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ solr_project_mirror }}/solr/{{ solr_version }}/{{ solr_filename }}.tgz"
     dest: "{{ solr_workspace }}/{{ solr_filename }}.tgz"
     force: false
@@ -36,7 +37,7 @@
   register: solr_download_status
 
 - name: Expand Solr.
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ solr_workspace }}/{{ solr_filename }}.tgz"
     dest: "{{ solr_workspace }}"
     copy: false
@@ -44,26 +45,32 @@
   tags: ['skip_ansible_lint']
 
 # Install Solr < 5.
-- include_tasks: install-pre5.yml
+- name: Install Solr version less than 5
+  ansible.builtin.include_tasks: install-pre5.yml
   when: "solr_version.split('.')[0] < '5'"
 
 # Install Solr 5+.
-- include_tasks: install.yml
+- name: Install Solr version 5 and above
+  ansible.builtin.include_tasks: install.yml
   when: "solr_version.split('.')[0] >= '5'"
 
 - name: Ensure solr is started and enabled on boot if configured.
-  service:
+  ansible.builtin.service:
     name: "{{ solr_service_name }}"
     state: "{{ solr_service_state }}"
     enabled: true
   when: solr_service_manage
 
-# Configure solr.
-- include_tasks: configure.yml
+# Configure Solr if version is 5 or higher.
+- name: Configure Solr for version 5 and above
+  ansible.builtin.include_tasks: configure.yml
   when: "solr_version.split('.')[0] >= '5'"
 
-# Create cores, if any are configured.
-- include_tasks: cores.yml
+# Create Solr cores for version 5 or higher, if any are configured.
+- name: Create Solr cores for version 5 and above, if any are configured
+  ansible.builtin.include_tasks: cores.yml
   when: "solr_cores and solr_version.split('.')[0] >= '5'"
 
-- include_tasks: trim-fat.yml
+# Trim unnecessary files from Solr installation.
+- name: Trim unnecessary files from Solr installation
+  ansible.builtin.include_tasks: trim-fat.yml

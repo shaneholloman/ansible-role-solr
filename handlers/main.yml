@@ -1,6 +1,6 @@
 ---
-- name: restart solr
-  service:
+- name: Restart solr
+  ansible.builtin.service:
     name: "{{ solr_service_name }}"
     state: restarted
     sleep: 5

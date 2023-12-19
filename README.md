@@ -79,7 +79,7 @@ The hostname or IP address on which Solr will be reachable. `localhost` should w
 
     solr_restart_handler_enabled: true
 
-Whether the `restart solr` handler should be used or not. If you're building containers or AMIs, you might need to disable the restart handler for a provisioning run.
+Whether the `Restart solr` handler should be used or not. If you're building containers or AMIs, you might need to disable the restart handler for a provisioning run.
 
 ### Variables used only for Solr < 5.
 

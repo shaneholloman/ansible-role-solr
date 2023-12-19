@@ -1,18 +1,18 @@
 ---
 - name: Remove existing SOLR_HEAP configuration.
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ solr_config_file }}"
     regexp: "^SOLR_HEAP"
     state: absent
-  notify: restart solr
+  notify: Restart solr
 
 - name: Apply Solr configuration changes.
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ solr_config_file }}"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
-    mode: 0644
+    mode: '0644'
   with_items:
     - regexp: "^.?SOLR_JAVA_MEM="
       line: 'SOLR_JAVA_MEM="-Xms{{ solr_xms }} -Xmx{{ solr_xmx }}"'
@@ -22,4 +22,4 @@
       line: 'SOLR_TIMEZONE="{{ solr_timezone }}"'
     - regexp: "^.?SOLR_OPTS="
       line: 'SOLR_OPTS="{{ solr_opts }}"'
-  notify: restart solr
+  notify: Restart solr

@@ -31,7 +31,7 @@ solr_cores:
 
 solr_config_file: /etc/default/{{ solr_service_name }}.in.sh
 
-# Enable restart solr handler
+# Enable Restart solr handler
 solr_restart_handler_enabled: true
 
 # Used only for Solr < 5.
