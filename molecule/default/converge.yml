@@ -16,7 +16,7 @@
           - openjdk-8-jdk
       when: ansible_os_family == "Ubuntu"
 
-    - name: Set Java 11 package for Debian.
+    - name: Set Java 17 package for Debian.
       ansible.builtin.set_fact:
         java_packages:
           - openjdk-17-jdk
@@ -28,11 +28,10 @@
         cache_valid_time: 600
       when: ansible_os_family == "Debian"
 
-    # See: http://unix.stackexchange.com/a/342469
     - name: Install dependencies (Debian).
       ansible.builtin.apt:
         name:
-          - openjdk-11-jre-headless
+          - openjdk-17-jre-headless
           - ca-certificates-java
         state: present
       when: ansible_distribution == "Debian"
