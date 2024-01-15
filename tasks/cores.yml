@@ -18,7 +18,7 @@
   with_items: "{{ solr_cores }}"
 
 - name: Ensure core configuration directories exist.
-  ansible.builtin.command: "cp -r {{ solr_install_path }}/example/files/conf/ {{ solr_home }}/data/{{ item }}/"
+  ansible.builtin.command: "cp -r {{ solr_install_path }}/server/solr/configsets/_default/conf/ {{ solr_home }}/data/{{ item }}/"
   when: "item not in solr_cores_current.content"
   with_items: "{{ solr_cores }}"
   become: true
