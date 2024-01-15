@@ -7,13 +7,13 @@
     - name: Set Java 8 package for RedHat.
       ansible.builtin.set_fact:
         java_packages:
-          - java-1.8.0-openjdk
+          - openjdk-17-jdk
       when: ansible_os_family == "RedHat"
 
-    - name: Set Java 8 package for Ubuntu.
+    - name: Set Java 17 package for Ubuntu.
       ansible.builtin.set_fact:
         java_packages:
-          - openjdk-8-jdk
+          - openjdk-17-jdk
       when: ansible_os_family == "Ubuntu"
 
     - name: Set Java 17 package for Debian.
