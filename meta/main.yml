@@ -1,13 +1,12 @@
 ---
-dependencies: []
-
 galaxy_info:
   role_name: solr
   author: shaneholloman
   description: Apache Solr for Linux.
   company: "shaneholloman"
   license: "license (Unlicense)"
-  min_ansible_version: "2.10"
+  min_ansible_version: "2.12"
+
   platforms:
     - name: Debian
       versions:
@@ -15,6 +14,7 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - all
+
   galaxy_tags:
     - development
     - solr
@@ -23,3 +23,5 @@ galaxy_info:
     - container
     - apache
     - text
+
+dependencies: []
