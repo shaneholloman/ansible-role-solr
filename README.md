@@ -1,4 +1,4 @@
-# Ansible Role: Apache Solr
+# Ansible Role: `solr`
 
 [![CI](https://github.com/shaneholloman/ansible-role-solr/actions/workflows/ci.yml/badge.svg)](https://github.com/shaneholloman/ansible-role-solr/actions/workflows/ci.yml)
 
@@ -142,7 +142,7 @@ None.
 
 ## License
 
-MIT / BSD
+Unlicense
 
 ## Author Information
 
